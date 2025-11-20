@@ -231,7 +231,7 @@ function App() {
         ref={imgRef}
         src="ajay.png" 
         alt="myphoto" 
-        className='absolute -bottom-10 object-scale-down scale-125 md:scale-100 z-10 left-1/2'
+        className='absolute -bottom-10 object-scale-down scale-125 md:scale-100 z-10 left-1/2 pointer-events-none'
         style={{
           transform: 'translateX(-50%)'
         }}
