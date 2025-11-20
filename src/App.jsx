@@ -13,127 +13,138 @@ function App() {
   useEffect(() => {
     let touchStartX = 0
     let touchEndX = 0
-    let lastTouchTime = 0
 
     const handleTouchStart = (e) => {
-      touchStartX = e.touches[0].clientX
-      lastTouchTime = Date.now()
-    }
-
-    const handleTouchMove = (e) => {
-      // Allow native scrolling
+      if (isScrollingRef.current) return
+      touchStartX = e.changedTouches[0].screenX
     }
 
     const handleTouchEnd = (e) => {
-      touchEndX = e.changedTouches[0].clientX
+      if (isScrollingRef.current) return
+      
+      touchEndX = e.changedTouches[0].screenX
+      const threshold = 50
+      const diff = touchStartX - touchEndX
+
+      // Only trigger if swipe distance is significant enough
+      if (Math.abs(diff) < threshold) return
+
+      e.preventDefault()
+      isScrollingRef.current = true
+      
       const container = containerRef.current
       if (!container) return
 
-      const diff = touchStartX - touchEndX
-      const timeDiff = Date.now() - lastTouchTime
-      const threshold = 30 // Lower threshold for faster detection
-      const velocity = Math.abs(diff) / timeDiff
-
-      // Detect swipe: significant distance or high velocity
-      if (Math.abs(diff) < threshold && velocity < 0.5) return
-
       const sectionWidth = window.innerWidth
-      const currentScroll = container.scrollLeft
-      const currentSection = Math.round(currentScroll / sectionWidth)
+      const isMobile = window.innerWidth < 768
 
-      let targetSection = currentSection
-      if (diff > 0 && currentSection < 2) {
-        targetSection = currentSection + 1
-      } else if (diff < 0 && currentSection > 0) {
-        targetSection = currentSection - 1
+      if (diff > 0) {
+        // Swiped left -> go to designer section
+        if (currentSectionRef.current < 2) {
+          currentSectionRef.current++
+        }
+      } else {
+        // Swiped right -> go to developer section
+        if (currentSectionRef.current > 0) {
+          currentSectionRef.current--
+        }
       }
 
-      currentSectionRef.current = targetSection
+      // Animate image position based on section (only on md and larger screens)
+      if (!isMobile && imgRef.current) {
+        if (currentSectionRef.current === 0) {
+          gsap.to(imgRef.current, {
+            x: '35vw',
+            duration: 0.8,
+            ease: 'power2.inOut',
+          })
+        } else if (currentSectionRef.current === 2) {
+          gsap.to(imgRef.current, {
+            x: '-40vw',
+            duration: 0.8,
+            ease: 'power2.inOut',
+          })
+        } else {
+          gsap.to(imgRef.current, {
+            x: 0,
+            duration: 0.8,
+            ease: 'power2.inOut',
+          })
+        }
+      }
 
-      // Use smooth scroll API instead of GSAP
-      container.scrollTo({
-        left: targetSection * sectionWidth,
-        behavior: 'smooth'
+      // Animate SVGs
+      if (designerSvgRef.current) {
+        if (currentSectionRef.current === 2) {
+          if (!isMobile) {
+            gsap.to(designerSvgRef.current, {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'auto',
+            })
+          }
+        } else {
+          if (!isMobile) {
+            gsap.to(designerSvgRef.current, {
+              opacity: 0,
+              x: '100vw',
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'none',
+            })
+          }
+        }
+      }
+
+      if (developerSvgRef.current) {
+        if (currentSectionRef.current === 0) {
+          if (!isMobile) {
+            gsap.to(developerSvgRef.current, {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'auto',
+            })
+          }
+        } else {
+          if (!isMobile) {
+            gsap.to(developerSvgRef.current, {
+              opacity: 0,
+              x: '-100vw',
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'none',
+            })
+          }
+        }
+      }
+
+      gsap.to(container, {
+        scrollLeft: currentSectionRef.current * sectionWidth,
+        duration: 0.8,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          isScrollingRef.current = false
+        }
       })
-
-      // Trigger animations after scroll
-      setTimeout(() => {
-        triggerAnimations(targetSection)
-      }, 50)
     }
 
     const container = containerRef.current
     if (container) {
       container.addEventListener('touchstart', handleTouchStart, { passive: true })
-      container.addEventListener('touchmove', handleTouchMove, { passive: true })
-      container.addEventListener('touchend', handleTouchEnd, { passive: true })
+      container.addEventListener('touchend', handleTouchEnd, { passive: false })
     }
 
     return () => {
       if (container) {
         container.removeEventListener('touchstart', handleTouchStart)
-        container.removeEventListener('touchmove', handleTouchMove)
         container.removeEventListener('touchend', handleTouchEnd)
       }
     }
   }, [])
-
-  const triggerAnimations = (section) => {
-    const isMobile = window.innerWidth < 768
-
-    // Animate image
-    if (imgRef.current) {
-      if (section === 0) {
-        gsap.to(imgRef.current, { x: '35vw', duration: 0.6, ease: 'power2.inOut' })
-      } else if (section === 2) {
-        gsap.to(imgRef.current, { x: '-40vw', duration: 0.6, ease: 'power2.inOut' })
-      } else {
-        gsap.to(imgRef.current, { x: 0, duration: 0.6, ease: 'power2.inOut' })
-      }
-    }
-
-    // Animate designer SVG
-    if (designerSvgRef.current && !isMobile) {
-      if (section === 2) {
-        gsap.to(designerSvgRef.current, {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          ease: 'power2.inOut',
-          pointerEvents: 'auto',
-        })
-      } else {
-        gsap.to(designerSvgRef.current, {
-          opacity: 0,
-          x: '100vw',
-          duration: 0.6,
-          ease: 'power2.inOut',
-          pointerEvents: 'none',
-        })
-      }
-    }
-
-    // Animate developer SVG
-    if (developerSvgRef.current && !isMobile) {
-      if (section === 0) {
-        gsap.to(developerSvgRef.current, {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          ease: 'power2.inOut',
-          pointerEvents: 'auto',
-        })
-      } else {
-        gsap.to(developerSvgRef.current, {
-          opacity: 0,
-          x: '-100vw',
-          duration: 0.6,
-          ease: 'power2.inOut',
-          pointerEvents: 'none',
-        })
-      }
-    }
-  }
 
   useEffect(() => {
     const handleWheel = (e) => {
@@ -311,12 +322,12 @@ function App() {
               <div className='flex flex-col items-start md:items-center'>
                 <p className='text-2xl md:text-3xl font-montserrat font-bold text-[#FF5900] md:text-center'>Interested in my <br />Developer Skills</p>
                 <p className='text-xl hidden md:block text-[#FF5900]/50 font-montserrat font-normal' >scroll up</p>
-                <p className='text-lg md:hidden text-[#FF5900]/50 font-montserrat font-normal' >swipe Up</p>
+                <p className='text-lg md:hidden text-[#FF5900]/50 font-montserrat font-normal' >swipe left</p>
               </div>
               <div className='flex flex-col items-end md:items-center'>
                 <p className='text-2xl md:text-3xl font-montserrat font-bold text-[#FF5900] text-end md:text-center'>Interested in my <br />Designer Skills</p>
                 <p className='text-xl hidden md:block text-[#FF5900]/50 font-montserrat font-normal' >scroll down</p>
-                <p className='text-lg md:hidden text-[#FF5900]/50 font-montserrat font-normal' >swipe Down</p>
+                <p className='text-lg md:hidden text-[#FF5900]/50 font-montserrat font-normal' >swipe right</p>
               </div>
             </div>
           </div>
