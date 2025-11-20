@@ -15,25 +15,26 @@ function App() {
     let touchEndX = 0
 
     const handleTouchStart = (e) => {
+      if (isScrollingRef.current) return
       touchStartX = e.changedTouches[0].screenX
     }
 
     const handleTouchEnd = (e) => {
-      touchEndX = e.changedTouches[0].screenX
-      handleSwipe()
-    }
-
-    const handleSwipe = () => {
       if (isScrollingRef.current) return
-      const container = containerRef.current
-      if (!container) return
-
+      
+      touchEndX = e.changedTouches[0].screenX
       const threshold = 50
       const diff = touchStartX - touchEndX
 
+      // Only trigger if swipe distance is significant enough
       if (Math.abs(diff) < threshold) return
 
+      e.preventDefault()
       isScrollingRef.current = true
+      
+      const container = containerRef.current
+      if (!container) return
+
       const sectionWidth = window.innerWidth
       const isMobile = window.innerWidth < 768
 
@@ -72,6 +73,55 @@ function App() {
         }
       }
 
+      // Animate SVGs
+      if (designerSvgRef.current) {
+        if (currentSectionRef.current === 2) {
+          if (!isMobile) {
+            gsap.to(designerSvgRef.current, {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'auto',
+            })
+          }
+        } else {
+          if (!isMobile) {
+            gsap.to(designerSvgRef.current, {
+              opacity: 0,
+              x: '100vw',
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'none',
+            })
+          }
+        }
+      }
+
+      if (developerSvgRef.current) {
+        if (currentSectionRef.current === 0) {
+          if (!isMobile) {
+            gsap.to(developerSvgRef.current, {
+              opacity: 1,
+              x: 0,
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'auto',
+            })
+          }
+        } else {
+          if (!isMobile) {
+            gsap.to(developerSvgRef.current, {
+              opacity: 0,
+              x: '-100vw',
+              duration: 0.8,
+              ease: 'power2.inOut',
+              pointerEvents: 'none',
+            })
+          }
+        }
+      }
+
       gsap.to(container, {
         scrollLeft: currentSectionRef.current * sectionWidth,
         duration: 0.8,
@@ -84,8 +134,8 @@ function App() {
 
     const container = containerRef.current
     if (container) {
-      container.addEventListener('touchstart', handleTouchStart, false)
-      container.addEventListener('touchend', handleTouchEnd, false)
+      container.addEventListener('touchstart', handleTouchStart, { passive: true })
+      container.addEventListener('touchend', handleTouchEnd, { passive: false })
     }
 
     return () => {
