@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import NoiseOverlay from './components/Noise'
 import gsap from 'gsap'
+import SplitText from './components/SplitText'
+import LoadingScreen from './components/LoadingScreen'
 
 function App() {
   const containerRef = useRef(null)
@@ -9,6 +11,14 @@ function App() {
   const developerSvgRef = useRef(null)
   const currentSectionRef = useRef(1) // 0 = developer, 1 = main, 2 = designer
   const isScrollingRef = useRef(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [showAnimations, setShowAnimations] = useState(false)
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false)
+    // Show animations right when loading screen finishes (no delay needed)
+    setShowAnimations(true)
+  }
 
   useEffect(() => {
     const handleWheel = (e) => {
@@ -142,6 +152,7 @@ function App() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
+      {isLoading && <LoadingScreen onLoadingComplete={handleLoadingComplete} />}
       {/* Main scroll container */}
       <div
         ref={containerRef}
@@ -176,20 +187,42 @@ function App() {
 
         {/* Main/Home Section - Center */}
         <section id="home" className="h-screen w-screen shrink-0 flex flex-col relative">
-          <header className='m-8 flex justify-center md:justify-start items-center gap-4 animate-fadeInDown'>
-            <img src="logo.svg" alt="logo" className='h-8'/>
-            <p className='text-2xl font-calsans text-[#FF5900]'>Ajay Varma</p>
+          <header className='m-8 flex justify-center md:justify-start items-center gap-4'>
+            <img src="logo.svg" alt="logo" className='h-8 animate-fadeInDown'/>
+            <SplitText
+              text="Ajay Varma"
+              tag="p"
+              className='text-2xl font-calsans text-[#FF5900]'
+              delay={30}
+              duration={1.5}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: -40 }}
+              to={{ opacity: 1, y: 0 }}
+              animationDelay={3.3}
+            />
           </header>
           <div className='flex-1 flex flex-col'>
-            <h1 className='text-[100px] md:text-[200px] font-calsans text-[#FF5900] flex justify-center -mt-2 md:-mt-8 animate-fadeInDown delay-200'>Hello!</h1>
-            <div className='flex-1 m-10 flex flex-col md:flex-row gap-6 md:justify-between'>
+            <SplitText
+              text="Hello!"
+              tag="h1"
+              className='text-[100px] md:text-[200px] font-calsans text-[#FF5900] flex justify-center -mt-2 md:-mt-8'
+              delay={50}
+              duration={1.5}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              animationDelay={3.3}
+            />
+            <div className='flex-1 mx-10 md:mx-15 lg:mx-30 flex flex-col md:flex-row gap-6 md:justify-between'>
               <div className='flex flex-col items-start md:items-center'>
-                <p className='text-2xl md:text-3xl font-montserrat font-bold text-[#FF5900] md:text-center'>Interested in my <br />Developer Skills</p>
+                <p className='text-2xl md:text-3xl font-montserrat font-bold text-[#FF5900] md:text-center'>Interested in my <br />Developement Skills</p>
                 <p className='text-xl hidden md:block text-[#FF5900]/50 font-montserrat font-normal' >scroll up</p>
                 <p className='text-lg md:hidden text-[#FF5900]/50 font-montserrat font-normal' >swipe left</p>
               </div>
               <div className='flex flex-col items-end md:items-center'>
-                <p className='text-2xl md:text-3xl font-montserrat font-bold text-[#FF5900] text-end md:text-center'>Interested in my <br />Designer Skills</p>
+                <p className='text-2xl md:text-3xl font-montserrat font-bold text-[#FF5900] text-end md:text-center'>Interested in my <br />Design Skills</p>
                 <p className='text-xl hidden md:block text-[#FF5900]/50 font-montserrat font-normal' >scroll down</p>
                 <p className='text-lg md:hidden text-[#FF5900]/50 font-montserrat font-normal' >swipe right</p>
               </div>
