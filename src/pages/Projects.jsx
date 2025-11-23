@@ -1,69 +1,148 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import projects from './projects.json'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Footer from '../components/Footer'
+
+gsap.registerPlugin(ScrollTrigger)
+
+const CountUp = ({ start, end, duration }) => {
+  const [count, setCount] = useState(start)
+
+  useEffect(() => {
+    let startTime
+    const animateCount = (timestamp) => {
+      if (!startTime) startTime = timestamp
+      const progress = (timestamp - startTime) / (duration * 1000)
+      if (progress < 1) {
+        setCount(Math.floor(start + (end - start) * progress))
+        requestAnimationFrame(animateCount)
+      } else {
+        setCount(end)
+      }
+    }
+    requestAnimationFrame(animateCount)
+  }, [])
+
+  return <>{count}%</>
+}
 
 const Projects = () => {
-  const projects = [
-    {
-      id: 1,
-      title: 'Project One',
-      description: 'A modern web application built with React and Node.js',
-      tags: ['React', 'Node.js', 'MongoDB'],
-    },
-    {
-      id: 2,
-      title: 'Project Two',
-      description: 'Full-stack e-commerce platform with payment integration',
-      tags: ['React', 'Express', 'Stripe'],
-    },
-    {
-      id: 3,
-      title: 'Project Three',
-      description: 'Design system and component library',
-      tags: ['React', 'Storybook', 'Tailwind'],
-    },
-  ]
+  const [isLoading, setIsLoading] = useState(true)
+  const projectRefs = useRef([])
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    if (isLoading) return
+
+    projectRefs.current.forEach((ref, index) => {
+      if (ref) {
+        gsap.fromTo(
+          ref,
+          { opacity: 0, x: -100 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: ref,
+              start: 'top 85%',
+              end: 'top 10%',
+              scrub: false,
+              onEnter: () => {
+                gsap.fromTo(
+                  ref,
+                  { opacity: 0, x: -100 },
+                  { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }
+                )
+              },
+              onLeave: () => {
+                gsap.to(ref, { opacity: 0, x: -100, duration: 0.8, ease: 'power3.in' })
+              },
+              onEnterBack: () => {
+                gsap.to(ref, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' })
+              },
+              onLeaveBack: () => {
+                gsap.to(ref, { opacity: 0, x: -100, duration: 0.8, ease: 'power3.in' })
+              },
+            },
+          }
+        )
+      }
+    })
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+    }
+  }, [isLoading])
 
   return (
-    <div className="relative w-screen min-h-screen bg-[#FFE7E2] overflow-hidden">
+    <div className="relative w-screen min-h-screen bg-[#fff1ee] overflow-hidden">
+      {isLoading && (
+        <div className='fixed inset-0 bg-[#fff1ee] flex items-center justify-center z-50'>
+          <div className='flex flex-col items-center gap-4'>
+            <div className='text-6xl md:text-8xl font-calsans text-[#FF5900]'>
+              <CountUp start={0} end={100} duration={1.5} />
+            </div>
+            <p className='text-lg font-montserrat text-[#FF5900]'>Loading...</p>
+          </div>
+        </div>
+      )}
       <div className='flex flex-col items-center justify-start pt-20 px-6 md:px-20 pb-20'>
         {/* Header */}
         <div className='flex items-center justify-between w-full mb-16'>
           <h1 className='text-4xl md:text-6xl font-calsans text-[#FF5900]'>Projects</h1>
-          <Link to="/" className='font-montserrat text-lg md:text-xl text-[#FF5900] hover:opacity-70 transition-opacity'>
+          <a href="/" className='font-montserrat text-lg md:text-xl text-[#FF5900] hover:opacity-70 transition-opacity'>
             Back Home
-          </Link>
+          </a>
         </div>
 
-        {/* Projects Grid */}
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl'>
-          {projects.map((project) => (
+        {/* Projects List */}
+        <div className='flex flex-col gap-4'>
+          {projects.map((project, index) => (
             <div
               key={project.id}
-              className='flex flex-col gap-4 p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow'
+              ref={el => projectRefs.current[index] = el}
+              className='group relative overflow-hidden w-screen -mx-6 md:-mx-20'
             >
-              <h2 className='text-2xl md:text-3xl font-montserrat font-bold text-[#FF5900]'>
-                {project.title}
-              </h2>
-              <p className='text-lg text-[#FF5900]/70 font-montserrat'>
-                {project.description}
-              </p>
-              <div className='flex flex-wrap gap-2 mt-auto'>
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className='px-3 py-1 bg-[#FF5900] text-white rounded-full text-sm font-montserrat'
-                  >
-                    {tag}
+              <a
+                href={`/projects/${project.id}`}
+                className='relative block text-4xl md:text-5xl font-montserrat font-bold text-[#FF5900] py-3 px-6 md:px-20 w-full opacity-75 group-hover:opacity-100 scale-75 group-hover:scale-100 origin-left transition-all'
+                style={{ transitionDuration: '250ms', transitionTimingFunction: 'ease-in-out', transitionDelay: 'var(--hover-delay)' }}
+              >
+                {/* Background animation on hover */}
+                <span className='absolute inset-0 bg-[#FF5900] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-in-out' style={{ transitionDelay: 'var(--hover-delay)' }}></span>
+                
+                {/* Text and category container */}
+                <span className='relative flex items-center justify-between gap-4'>
+                  {/* Arrow that appears from left */}
+                  <span className='text-[#FF5900] group-hover:text-white opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 ease-in-out shrink-0' style={{ transitionDelay: 'var(--hover-delay)' }}>
+                    →
                   </span>
-                ))}
-              </div>
+                  
+                  {/* Title */}
+                  <span className='flex-1'>
+                    <span className='group-hover:text-white transition-colors duration-500 ease-in-out' style={{ transitionDelay: 'var(--hover-delay)' }}>
+                      {project.title}
+                    </span>
+                  </span>
+
+                  {/* Category aligned to right */}
+                  <span className='text-lg md:text-xl font-montserrat font-medium text-[#FF5900] group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out shrink-0' style={{ transitionDelay: 'var(--hover-delay)' }}>
+                    {project.category}
+                  </span>
+                </span>
+              </a>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Bottom div */}
-      <div id="bottom-div" className='h-30 md:h-50 w-full bg-[#FF5900] absolute bottom-0 left-0 right-0 z-0' />
+      <Footer />
     </div>
   )
 }

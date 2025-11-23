@@ -5,6 +5,9 @@ import gsap from 'gsap'
 import SplitText from './components/SplitText'
 import LoadingScreen from './components/LoadingScreen'
 import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
+import About from './pages/About'
+import NotFound from './pages/NotFound'
 
 function Home() {
   const containerRef = useRef(null)
@@ -197,12 +200,12 @@ function Home() {
             <p className='font-montserrat text-lg md:text-xl lg:text-2xl text-[#FF5900] text-center md:text-left max-w-md md:max-w-xl'>I focus on usability, performance, and creating experiences that feel modern and meaningful.</p>
 
             {/* Social Links */}
-            <div className='flex gap-6 md:gap-8'>
+            {/* <div className='flex gap-6 md:gap-8'>
               <a href="https://github.com/varmadesigns" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>GitHub</a>
               <a href="https://x.com/AJAYVARMA123629" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>X</a>
               <a href="https://www.linkedin.com/in/ajay-varma-aaa71933b/" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>LinkedIn</a>
-            </div>
-            {/* <a href="/projects" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>View Projects</a> */}
+            </div> */}
+            <a href="/projects" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>View Projects</a>
           </div>
 
           {/* Mobile version - top center */}
@@ -290,12 +293,12 @@ function Home() {
             <p className='font-montserrat text-lg md:text-xl lg:text-2xl text-[#FF5900] text-center md:text-right max-w-md md:max-w-xl'>I focus on clarity, detail, and user-centered design that creates smooth, meaningful digital experiences.</p>
 
             {/* Social Links */}
-            <div className='flex gap-6 md:gap-8'>
+            {/* <div className='flex gap-6 md:gap-8'>
               <a href="https://www.instagram.com/varmadesignzz/" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Instagram</a>
               <a href="https://www.behance.net/ajaydesigns" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Behance</a>
               <a href="https://dribbble.com/AjayVarmadesignare" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Dribbble</a>
-            </div>
-            {/* <a href="/projects" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>View Projects</a> */}
+            </div> */}
+            <a href="/projects" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>View Projects</a>
           </div>
 
           {/* Mobile version - top center */}
@@ -335,7 +338,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      {/* <Route path="/projects" element={<Projects />} /> */}
+      <Route path="/about" element={<About />} />
+      <Route path="/projects" element={<Projects />} />
+      <Route path="/projects/:id" element={<ProjectDetail />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
