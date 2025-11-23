@@ -18,7 +18,9 @@ const SplitText = ({
   textAlign = 'center',
   tag = 'p',
   onLetterAnimationComplete,
-  animationDelay = 0
+  animationDelay = 0,
+  style = {},
+  id = ''
 }) => {
   const ref = useRef(null);
   const animationCompletedRef = useRef(false);
@@ -112,7 +114,7 @@ const SplitText = ({
   );
 
   const renderTag = () => {
-    const style = {
+    const baseStyle = {
       textAlign,
       overflow: 'hidden',
       display: 'inline-block',
@@ -120,47 +122,48 @@ const SplitText = ({
       wordWrap: 'break-word',
       willChange: 'transform, opacity'
     };
+    const mergedStyle = { ...baseStyle, ...style };
     const classes = `split-parent ${className}`;
     switch (tag) {
       case 'h1':
         return (
-          <h1 ref={ref} style={style} className={classes}>
+          <h1 ref={ref} id={id} style={mergedStyle} className={classes}>
             {text}
           </h1>
         );
       case 'h2':
         return (
-          <h2 ref={ref} style={style} className={classes}>
+          <h2 ref={ref} id={id} style={mergedStyle} className={classes}>
             {text}
           </h2>
         );
       case 'h3':
         return (
-          <h3 ref={ref} style={style} className={classes}>
+          <h3 ref={ref} id={id} style={mergedStyle} className={classes}>
             {text}
           </h3>
         );
       case 'h4':
         return (
-          <h4 ref={ref} style={style} className={classes}>
+          <h4 ref={ref} id={id} style={mergedStyle} className={classes}>
             {text}
           </h4>
         );
       case 'h5':
         return (
-          <h5 ref={ref} style={style} className={classes}>
+          <h5 ref={ref} id={id} style={mergedStyle} className={classes}>
             {text}
           </h5>
         );
       case 'h6':
         return (
-          <h6 ref={ref} style={style} className={classes}>
+          <h6 ref={ref} id={id} style={mergedStyle} className={classes}>
             {text}
           </h6>
         );
       default:
         return (
-          <p ref={ref} style={style} className={classes}>
+          <p ref={ref} id={id} style={mergedStyle} className={classes}>
             {text}
           </p>
         );

@@ -186,6 +186,7 @@ function Home() {
             ref={developerSvgRef}
             src="developer.svg"
             alt="developer"
+            id="developer-svg"
             className='hidden md:block absolute top-0 left-0 w-1/3 h-auto'
             style={{
               opacity: 0,
@@ -241,7 +242,8 @@ function Home() {
             <SplitText
               text="Hello!"
               tag="h1"
-              className='text-[100px] md:text-[200px] font-calsans text-[#FF5900] flex justify-center -mt-2 md:-mt-8'
+              className='font-calsans text-[#FF5900] flex justify-center'
+              id="hello-heading"
               delay={50}
               duration={1.5}
               ease="power3.out"
@@ -273,6 +275,7 @@ function Home() {
             ref={designerSvgRef}
             src="designer.svg"
             alt="designer"
+            id="designer-svg"
             className='hidden md:block absolute right-0 top-0 w-1/3 h-auto z-10'
             style={{
               opacity: 0,

@@ -110,3 +110,81 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Mobile (default) sizing */
+h1#hello-heading {
+  font-size: 100px !important;
+  margin-top: -10px !important;
+}
+
+#developer,
+#designer {
+  padding-top: 40px !important;
+}
+
+#developer-svg,
+#designer-svg {
+  width: 150px !important;
+}
+
+#developer .font-bold.text-2xl:is(p),
+#designer .font-bold.text-2xl:is(p) {
+  font-size: 1.5rem !important;
+}
+
+#developer .max-w-md:is(p),
+#designer .max-w-md:is(p) {
+  font-size: 1.125rem !important;
+}
+
+img[src="ajay.png"][alt="myphoto"].hidden.md\:block {
+  height: 300px !important;
+}
+
+#bottom-div {
+  height: 120px !important;
+}
+
+/* Responsive sizing for md+ devices based on viewport height */
+@media (min-width: 768px) {
+  /* Developer and Designer section padding */
+  #developer,
+  #designer {
+    padding-top: clamp(20px, 25vh, 180px) !important;
+  }
+
+  /* SVG sizing for developer and designer */
+  #developer-svg,
+  #designer-svg {
+    width: clamp(150px, 65vh, 400px) !important;
+  }
+
+  /* Hello heading */
+  h1#hello-heading {
+    font-size: clamp(80px, 30vh, 200px) !important;
+    margin-top: clamp(-50px, -10vh, -80px) !important;
+  }
+
+  /* Developer and Designer section headings (Hi, I'm Ajay Varma) */
+  #developer .font-bold.text-2xl:is(p),
+  #designer .font-bold.text-2xl:is(p) {
+    font-size: clamp(1.5rem, 5vh, 2.5rem) !important;
+  }
+
+  /* Description paragraphs in developer and designer sections */
+  #developer .max-w-md:is(p),
+  #designer .max-w-md:is(p) {
+    font-size: clamp(1.125rem, 3vh, 1.375rem) !important;
+  }
+
+  /* Ajay image - md+ only */
+  img[src="ajay.png"][alt="myphoto"].hidden.md\:block {
+    height: clamp(300px, 100vh, 1000px) !important;
+  }
+
+  /* Bottom orange div */
+  #bottom-div {
+    height: clamp(100px, 20vh, 200px) !important;
+  }
+}
+
