@@ -4,8 +4,6 @@ import NoiseOverlay from './components/Noise'
 import gsap from 'gsap'
 import SplitText from './components/SplitText'
 import LoadingScreen from './components/LoadingScreen'
-import Projects from './pages/Projects'
-import ProjectDetail from './pages/ProjectDetail'
 import About from './pages/About'
 import NotFound from './pages/NotFound'
 
@@ -206,7 +204,7 @@ function Home() {
               <a href="https://x.com/AJAYVARMA123629" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>X</a>
               <a href="https://www.linkedin.com/in/ajay-varma-aaa71933b/" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>LinkedIn</a>
             </div> */}
-            <a href="/projects" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>View Projects</a>
+            <a href="/about" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Wanna know more about me?</a>
           </div>
 
           {/* Mobile version - top center */}
@@ -222,7 +220,7 @@ function Home() {
         </section>
 
         {/* Main/Home Section - Center */}
-        <section id="home" className="h-screen w-screen shrink-0 flex flex-col relative">
+        <section id="home" className="h-screen w-screen shrink-0 flex flex-col relative bg-[#FFE7E2]">
           <header className='m-8 flex justify-center md:justify-start items-center gap-4'>
             <img src="logo.svg" alt="logo" className='h-8 animate-fadeInDown' />
             <SplitText
@@ -301,7 +299,7 @@ function Home() {
               <a href="https://www.behance.net/ajaydesigns" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Behance</a>
               <a href="https://dribbble.com/AjayVarmadesignare" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Dribbble</a>
             </div> */}
-            <a href="/projects" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>View Projects</a>
+            <a href="/about" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Wanna know more about me?</a>
           </div>
 
           {/* Mobile version - top center */}
@@ -342,8 +340,6 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/projects/:id" element={<ProjectDetail />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )
