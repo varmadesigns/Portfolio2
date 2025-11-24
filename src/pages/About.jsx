@@ -62,7 +62,7 @@ const About = () => {
       id: 4,
       title: 'IEDC Summit',
       description: "The IEDC Summit is an annual event organized by the Kerala Startup Mission for young innovators from Innovation and Entrepreneurship Development Centres (IEDCs) across the state. It's considered Asia's largest summit for aspiring entrepreneurs, featuring keynote sessions, workshops, and opportunities to showcase student projects and startups.",
-      tools: ['React', 'OpenAI API', 'Express', 'MongoDB'],
+      tools: ['Figma'],
       thumbnail: '/projects/iedc.png',
       link: 'https://iedcsummit.in',
       linkTitle: 'Website'
