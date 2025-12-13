@@ -274,6 +274,10 @@ const About = () => {
                       <p className='font-montserrat font-bold text-[#FF5900] text-sm'>Co-Founder & UI/UX Designer, Web & App Developer</p>
                       <p className='font-montserrat text-[#FF5900]/70 text-sm'>Wibe for Creators (Community Platform)</p>
                     </div>
+                     <div className='flex flex-col gap-1'>
+                      <p className='font-montserrat font-bold text-[#FF5900] text-sm'>UI/UX Designer & Graphics Designer</p>
+                      <p className='font-montserrat text-[#FF5900]/70 text-sm'>Nodify Creative</p>
+                    </div>
                     <div className='flex flex-col gap-1'>
                       <p className='font-montserrat font-bold text-[#FF5900] text-sm'>UI/UX Designer (App)</p>
                       <p className='font-montserrat text-[#FF5900]/70 text-sm'>MakeMyPass</p>
