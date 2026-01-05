@@ -30,6 +30,21 @@ const About = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState('')
 
+  // Enable scrolling on the About page by overriding global styles
+  useEffect(() => {
+    document.body.style.overflow = 'auto'
+    document.body.style.touchAction = 'auto'
+    document.documentElement.style.overflow = 'auto'
+    document.documentElement.style.touchAction = 'auto'
+
+    return () => {
+      document.body.style.overflow = 'hidden'
+      document.body.style.touchAction = 'none'
+      document.documentElement.style.overflow = 'hidden'
+      document.documentElement.style.touchAction = 'none'
+    }
+  }, [])
+
   const projects = [
     {
       id: 1,
@@ -191,7 +206,7 @@ const About = () => {
   }, [isLoading])
 
   return (
-    <div className="relative w-screen min-h-screen bg-[#fff1ee] overflow-hidden">
+    <div className="relative w-screen min-h-screen bg-[#fff1ee] overflow-x-hidden">
       {isLoading && (
         <div className='fixed inset-0 bg-[#fff1ee] flex items-center justify-center z-50'>
           <div className='flex flex-col items-center gap-4'>
