@@ -23,119 +23,188 @@ function Home() {
     setShowAnimations(true)
   }
 
-  useEffect(() => {
-    const handleWheel = (e) => {
-      if (isScrollingRef.current) return
+  // Accumulated scroll delta for trackpad support
+  const accumulatedDeltaRef = useRef(0)
+  const scrollTimeoutRef = useRef(null)
+  const touchStartRef = useRef({ x: 0, y: 0 })
+  const SCROLL_THRESHOLD = 50 // Minimum accumulated delta to trigger section change
+  const SWIPE_THRESHOLD = 50 // Minimum swipe distance for touch
 
-      const container = containerRef.current
-      if (!container) return
+  // Function to animate to a specific section
+  const animateToSection = (targetSection) => {
+    const container = containerRef.current
+    if (!container || isScrollingRef.current) return
+    if (targetSection < 0 || targetSection > 2) return
+    if (targetSection === currentSectionRef.current) return
 
-      e.preventDefault()
-      isScrollingRef.current = true
+    isScrollingRef.current = true
+    currentSectionRef.current = targetSection
 
-      const sectionWidth = window.innerWidth
+    const sectionWidth = window.innerWidth
+    const isMobile = window.innerWidth < 768
 
-      if (e.deltaY > 0) {
-        // Scroll down -> go to designer section
-        if (currentSectionRef.current < 2) {
-          currentSectionRef.current++
-        }
+    // Animate image position based on section (only on md and larger screens)
+    if (!isMobile && imgRef.current) {
+      if (currentSectionRef.current === 0) {
+        // Developer section - image to right
+        gsap.to(imgRef.current, {
+          x: '35vw',
+          duration: 0.8,
+          ease: 'power2.inOut',
+        })
+      } else if (currentSectionRef.current === 2) {
+        // Designer section - image to left
+        gsap.to(imgRef.current, {
+          x: '-40vw',
+          duration: 0.8,
+          ease: 'power2.inOut',
+        })
       } else {
-        // Scroll up -> go to developer section
-        if (currentSectionRef.current > 0) {
-          currentSectionRef.current--
-        }
+        // Main section - center image
+        gsap.to(imgRef.current, {
+          x: 0,
+          duration: 0.8,
+          ease: 'power2.inOut',
+        })
       }
+    }
 
-      // Animate image position based on section (only on md and larger screens)
-      const isMobile = window.innerWidth < 768
-      if (!isMobile && imgRef.current) {
-        if (currentSectionRef.current === 0) {
-          // Developer section - image to right
-          gsap.to(imgRef.current, {
-            x: '35vw',
-            duration: 0.8,
-            ease: 'power2.inOut',
-          })
-        } else if (currentSectionRef.current === 2) {
-          // Designer section - image to left
-          gsap.to(imgRef.current, {
-            x: '-40vw',
-            duration: 0.8,
-            ease: 'power2.inOut',
-          })
-        } else {
-          // Main section - center image
-          gsap.to(imgRef.current, {
+    // Animate designer SVG based on section
+    if (designerSvgRef.current) {
+      if (currentSectionRef.current === 2) {
+        // Designer section - fade in and move from right
+        if (!isMobile) {
+          gsap.to(designerSvgRef.current, {
+            opacity: 1,
             x: 0,
             duration: 0.8,
             ease: 'power2.inOut',
+            pointerEvents: 'auto',
+          })
+        }
+      } else {
+        // Other sections - hide and move to right
+        if (!isMobile) {
+          gsap.to(designerSvgRef.current, {
+            opacity: 0,
+            x: '100vw',
+            duration: 0.8,
+            ease: 'power2.inOut',
+            pointerEvents: 'none',
           })
         }
       }
+    }
 
-      // Animate designer SVG based on section
-      if (designerSvgRef.current) {
-        if (currentSectionRef.current === 2) {
-          // Designer section - fade in and move from right
-          if (!isMobile) {
-            gsap.to(designerSvgRef.current, {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: 'power2.inOut',
-              pointerEvents: 'auto',
-            })
-          }
-        } else {
-          // Other sections - hide and move to right
-          if (!isMobile) {
-            gsap.to(designerSvgRef.current, {
-              opacity: 0,
-              x: '100vw',
-              duration: 0.8,
-              ease: 'power2.inOut',
-              pointerEvents: 'none',
-            })
-          }
+    // Animate developer SVG based on section
+    if (developerSvgRef.current) {
+      if (currentSectionRef.current === 0) {
+        // Developer section - fade in and move from left
+        if (!isMobile) {
+          gsap.to(developerSvgRef.current, {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: 'power2.inOut',
+            pointerEvents: 'auto',
+          })
+        }
+      } else {
+        // Other sections - hide and move to left
+        if (!isMobile) {
+          gsap.to(developerSvgRef.current, {
+            opacity: 0,
+            x: '-100vw',
+            duration: 0.8,
+            ease: 'power2.inOut',
+            pointerEvents: 'none',
+          })
         }
       }
+    }
 
-      // Animate developer SVG based on section
-      if (developerSvgRef.current) {
-        if (currentSectionRef.current === 0) {
-          // Developer section - fade in and move from left
-          if (!isMobile) {
-            gsap.to(developerSvgRef.current, {
-              opacity: 1,
-              x: 0,
-              duration: 0.8,
-              ease: 'power2.inOut',
-              pointerEvents: 'auto',
-            })
-          }
-        } else {
-          // Other sections - hide and move to left
-          if (!isMobile) {
-            gsap.to(developerSvgRef.current, {
-              opacity: 0,
-              x: '-100vw',
-              duration: 0.8,
-              ease: 'power2.inOut',
-              pointerEvents: 'none',
-            })
-          }
-        }
+    gsap.to(container, {
+      scrollLeft: currentSectionRef.current * sectionWidth,
+      duration: 0.8,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        isScrollingRef.current = false
+        accumulatedDeltaRef.current = 0
+      }
+    })
+  }
+
+  useEffect(() => {
+    const handleWheel = (e) => {
+      e.preventDefault()
+
+      if (isScrollingRef.current) return
+
+      // Accumulate scroll delta for smooth trackpad handling
+      accumulatedDeltaRef.current += e.deltaY
+
+      // Clear any existing timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
       }
 
-      gsap.to(container, {
-        scrollLeft: currentSectionRef.current * sectionWidth,
-        duration: 0.8,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          isScrollingRef.current = false
-        }
-      })
+      // Set a timeout to reset accumulated delta if user stops scrolling
+      scrollTimeoutRef.current = setTimeout(() => {
+        accumulatedDeltaRef.current = 0
+      }, 150)
+
+      // Check if accumulated delta exceeds threshold
+      if (Math.abs(accumulatedDeltaRef.current) >= SCROLL_THRESHOLD) {
+        const direction = accumulatedDeltaRef.current > 0 ? 1 : -1
+        const targetSection = currentSectionRef.current + direction
+        accumulatedDeltaRef.current = 0 // Reset immediately to prevent double triggers
+
+        animateToSection(targetSection)
+      }
+    }
+
+    // Touch event handlers for mobile and touchscreen devices
+    const handleTouchStart = (e) => {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
+      }
+    }
+
+    const handleTouchEnd = (e) => {
+      if (isScrollingRef.current) return
+
+      const touchEndX = e.changedTouches[0].clientX
+      const touchEndY = e.changedTouches[0].clientY
+
+      const deltaX = touchStartRef.current.x - touchEndX
+      const deltaY = touchStartRef.current.y - touchEndY
+
+      // Determine if it's a horizontal or vertical swipe
+      const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY)
+
+      if (isHorizontalSwipe && Math.abs(deltaX) >= SWIPE_THRESHOLD) {
+        // Horizontal swipe: right swipe = designer, left swipe = developer
+        const direction = deltaX > 0 ? 1 : -1
+        const targetSection = currentSectionRef.current + direction
+        animateToSection(targetSection)
+      } else if (!isHorizontalSwipe && Math.abs(deltaY) >= SWIPE_THRESHOLD) {
+        // Vertical swipe on mobile can also navigate (for consistency)
+        const direction = deltaY > 0 ? 1 : -1
+        const targetSection = currentSectionRef.current + direction
+        animateToSection(targetSection)
+      }
+    }
+
+    // Keyboard navigation for accessibility
+    const handleKeyDown = (e) => {
+      if (isScrollingRef.current) return
+
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        animateToSection(currentSectionRef.current + 1)
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        animateToSection(currentSectionRef.current - 1)
+      }
     }
 
     const container = containerRef.current
@@ -146,6 +215,9 @@ function Home() {
       }, 0)
 
       window.addEventListener('wheel', handleWheel, { passive: false })
+      window.addEventListener('touchstart', handleTouchStart, { passive: true })
+      window.addEventListener('touchend', handleTouchEnd, { passive: true })
+      window.addEventListener('keydown', handleKeyDown)
 
       // Animate developer and designer text elements
       gsap.fromTo('.dev-text',
@@ -161,6 +233,12 @@ function Home() {
 
     return () => {
       window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchend', handleTouchEnd)
+      window.removeEventListener('keydown', handleKeyDown)
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
     }
   }, [])
 
@@ -170,10 +248,11 @@ function Home() {
       {/* Main scroll container */}
       <div
         ref={containerRef}
-        className="w-screen h-screen overflow-x-scroll overflow-y-hidden flex scroll-smooth"
+        className="w-screen h-screen overflow-x-scroll overflow-y-hidden flex hide-scrollbar"
         style={{
           scrollBehavior: 'auto',
-          overscrollBehavior: 'contain',
+          overscrollBehavior: 'none',
+          touchAction: 'none',
         }}
       >
         {/* Developer Section - Left */}
