@@ -25,7 +25,7 @@ const CountUp = ({ start, end, duration }) => {
 
 const About = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [activeSection, setActiveSection] = useState('introduction')
+  const [activeSection, setActiveSection] = useState('projects')
   const [animatedSections, setAnimatedSections] = useState(new Set())
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState('')
@@ -149,11 +149,11 @@ const About = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['introduction', 'development', 'design', 'services', 'projects', 'tools', 'contact']
+      const sections = ['projects', 'introduction', 'tools', 'contact']
       const viewportMidpoint = window.innerHeight / 2
 
       // Find the section that's closest to the middle of screen
-      let closestSection = 'introduction'
+      let closestSection = 'projects'
       let closestDistance = Infinity
       const visibleSections = new Set()
 
@@ -231,11 +231,8 @@ const About = () => {
           {/* Timeline Sidebar */}
           <div className='hidden md:flex flex-col gap-6 w-48 fixed left-20 top-1/2 h-fit'>
             {[
-              { id: 'introduction', label: 'Introduction' },
-              { id: 'development', label: 'Development' },
-              { id: 'design', label: 'Design' },
-              { id: 'services', label: 'Services' },
-              { id: 'projects', label: 'Projects' },
+              { id: 'projects', label: 'Experience' },
+              { id: 'introduction', label: 'About Me' },
               { id: 'tools', label: 'Tools' },
               { id: 'contact', label: 'Contact' }
             ].map((section) => (
@@ -261,6 +258,43 @@ const About = () => {
 
           {/* About Content */}
           <div className='w-full max-w-4xl flex flex-col gap-16 md:ml-56'>
+            {/* Projects Section */}
+            <div id="projects" className='flex flex-col items-end gap-6 transition-opacity duration-500' style={{ animation: animatedSections.has('projects') ? 'fadeInLeft 0.8s ease-out forwards' : 'fadeOutLeft 0.8s ease-out forwards', opacity: animatedSections.has('projects') ? 1 : 0 }}>
+              <h2 className='text-3xl md:text-5xl font-calsans text-[#FF5900] '>Projects</h2>
+              <div className='columns-1 md:columns-2 gap-6'>
+                {projects.map((project) => (
+                  <div key={project.id} className='flex flex-col overflow-hidden rounded-2xl bg-white border-2 border-[#FF5900]/10 hover:border-[#FF5900]/40 hover:shadow-lg transition-all duration-300 break-inside-avoid mb-6'>
+                    {/* Thumbnail */}
+                    <div className='w-full overflow-hidden bg-linear-to-br from-[#FFE7E2] to-[#FF5900]/20'>
+                      <img src={project.thumbnail} alt={project.title} className='w-full h-auto object-cover hover:scale-105 transition-transform duration-500' />
+                    </div>
+                    {/* Content */}
+                    <div className='flex flex-col gap-3 p-5'>
+                      <div className='flex items-center justify-between'>
+                        <h3 className='text-lg md:text-xl font-montserrat font-bold text-[#FF5900]'>{project.title}</h3>
+                        {project.link && (
+                          <a href={project.link} target='_blank' rel='noopener noreferrer' className='text-sm font-montserrat font-semibold text-[#FF5900] hover:text-[#FF5900]/70 transition-colors duration-300 underline'>
+                            {project.linkTitle || project.link.replace('https://', '')}
+                          </a>
+                        )}
+                      </div>
+                      <p className='text-sm md:text-base text-[#FF5900]/70 font-montserrat leading-relaxed'>{project.description}</p>
+                      {/* Tools Tags */}
+                      <div className='flex flex-wrap gap-2 mt-2 pt-2 border-t border-[#FF5900]/10'>
+                        {project.tools.filter(tool => tool).map((tool, idx) => (
+                          <span key={idx} className='px-2.5 py-1 bg-[#FFE7E2] text-[#FF5900] text-xs font-montserrat font-semibold rounded-full border border-[#FF5900]/20'>
+                            {tool}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <hr className='border-[#FF5900]/20' />
+
             {/* Introduction */}
             <div id="introduction" className='flex flex-col gap-8'>
               <p className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat leading-relaxed'>
@@ -322,81 +356,7 @@ const About = () => {
               </div>
             </div>
 
-            <hr className='border-[#FF5900]/20' />
 
-            {/* Developer Section */}
-            <div id="development" className='flex flex-col items-end gap-4 text-justify transition-opacity duration-500' style={{ animation: animatedSections.has('development') ? 'fadeInRight 0.8s ease-out forwards' : 'fadeOutRight 0.8s ease-out forwards', opacity: animatedSections.has('development') ? 1 : 0 }}>
-              <h2 className='text-3xl md:text-5xl font-calsans text-[#FF5900]'>Development</h2>
-              <p className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat leading-relaxed'>
-                As a full-stack developer, I specialize in building complete digital products. I have expertise in modern web technologies including React, Node.js, MongoDB, and more.
-              </p>
-            </div>
-
-            <hr className='border-[#FF5900]/20' />
-
-            {/* Design Section */}
-            <div id="design" className='flex flex-col gap-4 text-justify transition-opacity duration-500' style={{ animation: animatedSections.has('design') ? 'fadeInLeft 0.8s ease-out forwards' : 'fadeOutLeft 0.8s ease-out forwards', opacity: animatedSections.has('design') ? 1 : 0 }}>
-              <h2 className='text-3xl md:text-5xl font-calsans text-[#FF5900]'>Design</h2>
-              <p className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat leading-relaxed'>
-                As a UI/UX designer, I craft intuitive interfaces that users love to interact with. I focus on clarity, detail, and user-centered design principles to create meaningful digital experiences.
-              </p>
-            </div>
-
-            <hr className='border-[#FF5900]/20' />
-
-            {/* What I Do */}
-            <div id="services" className='flex flex-col gap-4'>
-              <h2 className='text-3xl md:text-5xl font-calsans text-[#FF5900]'>What I Do</h2>
-              <ul className='flex flex-col gap-3'>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ Full-stack web development with modern technologies</li>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ UI/UX design for web and mobile applications</li>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ Design systems and Prototyping</li>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ Responsive design implementation</li>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ Interactive Design</li>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ Graphics Design</li>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ Illustrations</li>
-                <li className='text-lg md:text-xl text-[#FF5900]/70 font-montserrat'>✦ Logo Design and Branding</li>
-              </ul>
-            </div>
-
-            <hr className='border-[#FF5900]/20' />
-
-            {/* Projects Section */}
-            <div id="projects" className='flex flex-col items-end gap-6 transition-opacity duration-500' style={{ animation: animatedSections.has('projects') ? 'fadeInLeft 0.8s ease-out forwards' : 'fadeOutLeft 0.8s ease-out forwards', opacity: animatedSections.has('projects') ? 1 : 0 }}>
-              <h2 className='text-3xl md:text-5xl font-calsans text-[#FF5900] '>Experience</h2>
-              <div className='columns-1 md:columns-2 gap-6'>
-                {projects.map((project) => (
-                  <div key={project.id} className='flex flex-col overflow-hidden rounded-2xl bg-white border-2 border-[#FF5900]/10 hover:border-[#FF5900]/40 hover:shadow-lg transition-all duration-300 break-inside-avoid mb-6'>
-                    {/* Thumbnail */}
-                    <div className='w-full overflow-hidden bg-linear-to-br from-[#FFE7E2] to-[#FF5900]/20'>
-                      <img src={project.thumbnail} alt={project.title} className='w-full h-auto object-cover hover:scale-105 transition-transform duration-500' />
-                    </div>
-                    {/* Content */}
-                    <div className='flex flex-col gap-3 p-5'>
-                      <div className='flex items-center justify-between'>
-                        <h3 className='text-lg md:text-xl font-montserrat font-bold text-[#FF5900]'>{project.title}</h3>
-                        {project.link && (
-                          <a href={project.link} target='_blank' rel='noopener noreferrer' className='text-sm font-montserrat font-semibold text-[#FF5900] hover:text-[#FF5900]/70 transition-colors duration-300 underline'>
-                            {project.linkTitle || project.link.replace('https://', '')}
-                          </a>
-                        )}
-                      </div>
-                      <p className='text-sm md:text-base text-[#FF5900]/70 font-montserrat leading-relaxed'>{project.description}</p>
-                      {/* Tools Tags */}
-                      <div className='flex flex-wrap gap-2 mt-2 pt-2 border-t border-[#FF5900]/10'>
-                        {project.tools.filter(tool => tool).map((tool, idx) => (
-                          <span key={idx} className='px-2.5 py-1 bg-[#FFE7E2] text-[#FF5900] text-xs font-montserrat font-semibold rounded-full border border-[#FF5900]/20'>
-                            {tool}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <hr className='border-[#FF5900]/20' />
 
             {/* Tools Section */}
             <div id="tools" className='flex flex-col gap-6 transition-opacity duration-500' style={{ animation: animatedSections.has('tools') ? 'fadeInLeft 0.8s ease-out forwards' : 'fadeOutLeft 0.8s ease-out forwards', opacity: animatedSections.has('tools') ? 1 : 0 }}>
