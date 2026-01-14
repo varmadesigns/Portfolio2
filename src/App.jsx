@@ -283,7 +283,7 @@ function Home() {
               <a href="https://x.com/AJAYVARMA123629" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>X</a>
               <a href="https://www.linkedin.com/in/ajay-varma-aaa71933b/" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>LinkedIn</a>
             </div> */}
-            <a href="/about" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Wanna know more about me?</a>
+            <a href="/about" className='font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-3 px-6 border-1 border-[#FF5900] rounded-xl hover:bg-[#FF5900] hover:text-[#FFE7E2] transition-colors duration-300'>Wanna know more about me?</a>
           </div>
 
           {/* Mobile version - top center */}
@@ -378,7 +378,7 @@ function Home() {
               <a href="https://www.behance.net/ajaydesigns" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Behance</a>
               <a href="https://dribbble.com/AjayVarmadesignare" target="_blank" rel="noopener noreferrer" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Dribbble</a>
             </div> */}
-            <a href="/about" className='social-link font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-2 px-2'>Wanna know more about me?</a>
+            <a href="/about" className='font-montserrat text-base md:text-lg lg:text-xl text-[#FF5900] py-3 px-6 border-1 border-[#FF5900] rounded-xl hover:bg-[#FF5900] hover:text-[#FFE7E2] transition-colors duration-300'>Wanna know more about me?</a>
           </div>
 
           {/* Mobile version - top center */}
