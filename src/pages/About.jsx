@@ -70,8 +70,8 @@ const About = () => {
       description: 'MakeMyPass is an event-tech platform that provides a digital solution for organizers to manage events from start to finish. worked as UI/UX Designer are delivered high fidelity design.',
       tools: ['Figma'],
       thumbnail: '/projects/makemypass.webp',
-      link:'https://www.figma.com/design/A6LGheVuEciEVPv5hl5O9l/MakeMyPass?node-id=0-1&t=rCIYvl8Et69Otdki-1',
-      linkTitle:'figma page'
+      link: 'https://www.figma.com/design/A6LGheVuEciEVPv5hl5O9l/MakeMyPass?node-id=0-1&t=rCIYvl8Et69Otdki-1',
+      linkTitle: 'figma page'
     },
     {
       id: 4,
@@ -102,7 +102,7 @@ const About = () => {
       id: 7,
       title: 'Asthra 10',
       description: "Asthra 10.0 is the annual, national-level technical festival of St. Joseph's College of Engineering and Technology (SJCET) Palai, which celebrates its 10th anniversary. I designed the website and developed the frontend, this time we also go the oppurtunity to collab with MakeMyPass",
-      tools: ['figma','react','shadcn','tailwind css', 'supabase'],
+      tools: ['figma', 'react', 'shadcn', 'tailwind css', 'supabase'],
       thumbnail: '/projects/asthra.png',
       link: 'https://asthra.sjcet.in/',
       linkTitle: 'website'
@@ -257,10 +257,67 @@ const About = () => {
           </div>
 
           {/* About Content */}
-          <div className='w-full max-w-4xl flex flex-col gap-16 md:ml-56'>
+          <div className='w-full max-w-4xl flex flex-col gap-16 md:ml-56 text-[#FF5900]'>
             {/* Projects Section */}
             <div id="projects" className='flex flex-col items-end gap-6 transition-opacity duration-500' style={{ animation: animatedSections.has('projects') ? 'fadeInLeft 0.8s ease-out forwards' : 'fadeOutLeft 0.8s ease-out forwards', opacity: animatedSections.has('projects') ? 1 : 0 }}>
               <h2 className='text-3xl md:text-5xl font-calsans text-[#FF5900] '>Projects</h2>
+              <div className='flex flex-wrap justify-center gap-4'>
+                <a
+                  href="https://github.com/varmadesigns"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='font-montserrat relative group'
+                >
+                  GitHub
+                  <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[#FF5900] group-hover:w-full transition-all duration-500 ease-in-out'></span>
+                </a>
+                <a
+                  href="https://x.com/AJAYVARMA123629"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='font-montserrat relative group'
+                >
+                  Twitter
+                  <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[#FF5900] group-hover:w-full transition-all duration-500 ease-in-out'></span>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/ajay-varma-aaa71933b/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='font-montserrat relative group'
+                >
+                  LinkedIn
+                  <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[#FF5900] group-hover:w-full transition-all duration-500 ease-in-out'></span>
+                </a>
+                <a
+                  href="https://www.instagram.com/varmadesignzz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='font-montserrat relative group'
+                >
+                  Instagram
+                  <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[#FF5900] group-hover:w-full transition-all duration-500 ease-in-out'></span>
+                </a>
+                <a
+                  href="https://www.behance.net/ajaydesigns"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='font-montserrat relative group'
+                >
+                  Behance
+                  <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[#FF5900] group-hover:w-full transition-all duration-500 ease-in-out'></span>
+                </a>
+                <a
+                  href="https://dribbble.com/AjayVarmadesignare"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='font-montserrat relative group'
+                >
+                  Dribbble
+                  <span className='absolute bottom-0 left-0 w-0 h-0.5 bg-[#FF5900] group-hover:w-full transition-all duration-500 ease-in-out'></span>
+                </a>
+              </div>
+
               <div className='columns-1 md:columns-2 gap-6'>
                 {projects.map((project) => (
                   <div key={project.id} className='flex flex-col overflow-hidden rounded-2xl bg-white border-2 border-[#FF5900]/10 hover:border-[#FF5900]/40 hover:shadow-lg transition-all duration-300 break-inside-avoid mb-6'>
@@ -323,7 +380,7 @@ const About = () => {
                       <p className='font-montserrat font-bold text-[#FF5900] text-sm'>Co-Founder & UI/UX Designer, Web & App Developer</p>
                       <p className='font-montserrat text-[#FF5900]/70 text-sm'>Wibe for Creators (Community Platform)</p>
                     </div>
-                     <div className='flex flex-col gap-1'>
+                    <div className='flex flex-col gap-1'>
                       <p className='font-montserrat font-bold text-[#FF5900] text-sm'>UI/UX Designer & Graphics Designer</p>
                       <p className='font-montserrat text-[#FF5900]/70 text-sm'>Nodify Creative</p>
                     </div>
