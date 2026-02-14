@@ -32,16 +32,34 @@ const About = () => {
 
   // Enable scrolling on the About page by overriding global styles
   useEffect(() => {
-    document.body.style.overflow = 'auto'
-    document.body.style.touchAction = 'auto'
-    document.documentElement.style.overflow = 'auto'
-    document.documentElement.style.touchAction = 'auto'
+    // Save original styles
+    const originalBodyOverflow = document.body.style.overflow
+    const originalBodyTouchAction = document.body.style.touchAction
+    const originalBodyOverscroll = document.body.style.overscrollBehavior
+    const originalBodyWebkitScroll = document.body.style.webkitOverflowScrolling
+    const originalHtmlOverflow = document.documentElement.style.overflow
+    const originalHtmlTouchAction = document.documentElement.style.touchAction
+    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior
+    
+    // Enable scrolling with all necessary properties for mobile
+    document.body.style.setProperty('overflow', 'auto', 'important')
+    document.body.style.setProperty('touch-action', 'pan-y', 'important')
+    document.body.style.setProperty('overscroll-behavior', 'auto', 'important')
+    document.body.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important')
+    
+    document.documentElement.style.setProperty('overflow', 'auto', 'important')
+    document.documentElement.style.setProperty('touch-action', 'pan-y', 'important')
+    document.documentElement.style.setProperty('overscroll-behavior', 'auto', 'important')
 
     return () => {
-      document.body.style.overflow = 'hidden'
-      document.body.style.touchAction = 'none'
-      document.documentElement.style.overflow = 'hidden'
-      document.documentElement.style.touchAction = 'none'
+      // Restore original styles
+      document.body.style.overflow = originalBodyOverflow
+      document.body.style.touchAction = originalBodyTouchAction
+      document.body.style.overscrollBehavior = originalBodyOverscroll
+      document.body.style.webkitOverflowScrolling = originalBodyWebkitScroll
+      document.documentElement.style.overflow = originalHtmlOverflow
+      document.documentElement.style.touchAction = originalHtmlTouchAction
+      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll
     }
   }, [])
 
@@ -206,7 +224,7 @@ const About = () => {
   }, [isLoading])
 
   return (
-    <div className="relative w-screen min-h-screen bg-[#fff1ee] overflow-x-hidden">
+    <div className="relative w-full min-h-screen bg-[#fff1ee] overflow-x-hidden">
       {isLoading && (
         <div className='fixed inset-0 bg-[#fff1ee] flex items-center justify-center z-50'>
           <div className='flex flex-col items-center gap-4'>
